@@ -1,0 +1,20 @@
+---
+   project_name: cpp_pubsub
+
+   packages:
+      - name: ament_cmake
+        type: REQUIRED
+
+      - name: rclcpp
+        type: REQUIRED
+
+      - name: std_msgs
+        type: REQUIRED
+
+   executables:
+      - name: data
+        packages: rclcpp std_msgs
+
+      - name: main
+        packages: rclcpp std_msgs
+

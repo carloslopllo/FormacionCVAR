@@ -1,18 +1,15 @@
-#include <memory>
-#include <deque>
-
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/int32.hpp"
+{% for include in includes %}
+#include {{ include }}
+{% endfor %}
 
 using std::placeholders::_1;
 
-class MinimalSubscriber : public rclcpp::Node {
+class {{ class_name }} : public rclcpp::Node {
     public:
-        MinimalSubscriber() : Node({{ name }}) {
+        {{ class_name }}() : Node({{ name }}), num {0, 0}, ready {false, false} {
             {% for subscriber in subscribers %}
             {{ subscriber.name }} = this->create_subscription<std_msgs::msg::{{ type }}>({{ subscriber.topic }}, 10, std::bind(&MinimalSubscriber::{{ subscriber.callback }}, this, _1));
             {% endfor %}
-
             {% for publisher in publishers %}
             {{ publisher.name }} = this->create_publisher<std_msgs::msg::{{ type }}>({{ publisher.topic }}, 10);
             {% endfor %}
@@ -23,39 +20,36 @@ class MinimalSubscriber : public rclcpp::Node {
             auto {{ name }} = std_msgs::msg::{{ type }}();
             {% endfor %}
 
-            {% for n in rest %}
-            int {{ n.name }} = {{ n.deque }}.front();
-            {{ n.deque }}.pop_front();
+            {{ autos[0] }}.data = num[0] + num[1];
+            {{ autos[1] }}.data = num[0] - num[1];
+
+            RCLCPP_INFO(this->get_logger(), "'%d' + '%d' = '%d'", num[0], num[1], {{ autos[0] }}.data);
+            RCLCPP_INFO(this->get_logger(), "'%d' - '%d' = '%d'\n", num[0], num[1], {{ autos[1] }}.data);
+
+            {% for publisher in publishers %}
+            {{ publisher.name }}->publish({{ autos[publisher.num] }});
             {% endfor %}
-
-            {{ autos[0] }}.data = {{ rest[0]["name"] }} + {{ rest[1]["name"] }};
-            {{ autos[1] }}.data = {{ rest[0]["name"] }} - {{ rest[1]["name"] }};
-
-            RCLCPP_INFO(this->get_logger(), "'%d' + '%d' = '%d'", n1, n2, sum.data);
-            RCLCPP_INFO(this->get_logger(), "'%d' - '%d' = '%d'\n", n1, n2, minus.data);
-
-            {{ publishers[0]["name"] }}->publish({{ autos[0] }});
-            {{ publishers[1]["name"] }}->publish({{ autos[1] }});
         }
 
         {% for subscriber in subscribers %}
         void {{ subscriber.callback }}(const std_msgs::msg::{{ type }} & msg) {
-            {{ subscriber.deque }}.push_back(msg.data);
+            num[{{ subscriber.num }}] = msg.data;
+            ready[{{ subscriber.num }}] = true;
 
-            if (!{{ deque[0] }}.empty() && !{{ deque[1] }}.empty()) {
+            if (ready[0] && ready[1]) {
+                ready[1] = ready[0] = false;
                 send();
             }
         }
+        {% endfor %}
+        {% for subscriber in subscribers %}
         rclcpp::Subscription<std_msgs::msg::{{ type }}>::SharedPtr {{ subscriber.name }};
         {% endfor %}
-
         {% for publisher in publishers %}
         rclcpp::Publisher<std_msgs::msg::{{ type }}>::SharedPtr {{ publisher.name }};
         {% endfor %}
-
-        {% for n in rest %}
-        {{ n.type }} {{ n.deque }};
-        {% endfor %}
+        int num[2];
+        bool ready[2];
 };
 
 int main(int argc, char **argv) {
