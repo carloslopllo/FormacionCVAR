@@ -1,0 +1,62 @@
+---
+# t_central_node.cpp
+   includes:
+      - <memory>
+      - '"rclcpp/rclcpp.hpp"'
+      - '"std_msgs/msg/int32.hpp"'
+      - '"../include/central_node_pkg/trigger.hpp"'
+
+   class_name: MinimalSubscriber
+
+   node_name: central_node
+
+   inputs:
+      - topic: data1
+        type: Int32
+
+      - topic: data2
+        type: Int32
+
+   outputs:
+      - topic: sum
+        type: Int32
+
+      - topic: minus
+        type: Int32
+
+# t_CMakeLists.txt
+   project_name: central_node_pkg
+
+   dependencies:
+      - packages:
+         - name: ament_cmake
+           type: buildtool_
+           description: REQUIRED
+
+         - name: rclcpp
+           type: ""
+           description: REQUIRED
+
+         - name: std_msgs
+           type: ""
+           description: REQUIRED
+
+      - testing_CMakeLists:
+         - name: ament_lint_auto
+           type: test_
+           description: REQUIRED
+           ament: ament_lint_auto_find_test_dependencies()
+
+         - name: ament_cmake_cppcheck
+           type: test_
+           description: REQUIRED
+           ament: ament_cppcheck(src/ include/ tests/)
+
+         - name: ament_cmake_clang_format
+           type: test_
+           description: REQUIRED
+           ament: ament_clang_format(src/ include/ tests/ --config ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format)
+
+      - testing_package:
+         - name: ament_lint_common
+           type: test_
