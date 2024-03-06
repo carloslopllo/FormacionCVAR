@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>{{ project_name }}</name>
+  <version>1.0.0</version>
+  <description>Package containing the central node</description>
+  <maintainer email="carlos.lopez.llorente@alumnos.upm.es">vboxuser</maintainer>
+  <license>Apache-2.0</license>
+
+  {% for dependency in dependencies[0]["packages"] %}
+  <{{ dependency.type }}depend>{{ dependency.name }}</{{ dependency.type }}depend>
+  {% endfor %}
+
+  {% for dependency in dependencies[1]["testing_CMakeLists"] %}
+  <{{ dependency.type }}depend>{{ dependency.name }}</{{ dependency.type }}depend>
+  {% endfor %}
+
+  {% for dependency in dependencies[2]["testing_package"] %}
+  <{{ dependency.type }}depend>{{ dependency.name }}</{{ dependency.type }}depend>
+  {% endfor %}
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

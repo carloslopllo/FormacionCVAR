@@ -1,0 +1,35 @@
+---
+   subscribers:
+      - name: sub_1
+        topic: '"data1"'
+        callback: callback_1
+        num: 0
+
+      - name: sub_2
+        topic: '"data2"'
+        callback: callback_2
+        num: 1
+
+   publishers:
+      - name: pub_1
+        topic: '"sum"'
+        num: 0
+
+      - name: pub_2
+        topic: '"minus"'
+        num: 1
+
+   includes:
+      - <memory>
+      - '"rclcpp/rclcpp.hpp"'
+      - '"std_msgs/msg/int32.hpp"'
+
+   name: '"main"'
+
+   type: Int32
+
+   autos:
+      - sum
+      - minus
+
+   class_name: MinimalSubscriber
