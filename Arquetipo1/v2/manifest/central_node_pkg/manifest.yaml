@@ -1,0 +1,54 @@
+---
+  project_name: central_node_pkg
+
+  project_version: 2.0.0
+
+  project_description: Package containing the central node
+
+  maintainer_email: carlos.lopez.llorente@alumnos.upm.es
+
+  maintainer: vboxuser
+
+  license: Apache-2.0
+
+  buildtools:
+    - name: ament_cmake
+
+  dependencies:
+    - name: rclcpp
+    - name: std_msgs
+
+  testing_CMakeLists:
+    - name: ament_lint_auto
+      ament: ament_lint_auto_find_test_defaultencies()
+
+    - name: ament_cmake_cppcheck
+      ament: ament_cppcheck(src/ include/ tests/)
+
+    - name: ament_cmake_clang_format
+      ament: ament_clang_format(src/ include/ tests/ --config ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format)
+
+  testing_package:
+    - ament_lint_common
+
+  class_name: node
+
+  includes:
+    - <memory>
+    - '"rclcpp/rclcpp.hpp"'
+    - '"std_msgs/msg/int32.hpp"'
+    - '"central_node_pkg/trigger.hpp"'
+
+  inputs:
+    - topic: data1
+      type: std_msgs::msg::Int32
+
+    - topic: data2
+      type: std_msgs::msg::Int32
+
+  outputs:
+    - topic: sum
+      type: std_msgs::msg::Int32
+
+    - topic: minus
+      type: std_msgs::msg::Int32
