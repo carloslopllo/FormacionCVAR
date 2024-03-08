@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>{{ project_name }}</name>
+  <version>{{ project_version }}</version>
+  <description>{{ project_description }}</description>
+  <maintainer email="{{ maintainer_email }}">{{ maintainer }}</maintainer>
+  <license>{{ license }}</license>
+
+  {% for buildtool in buildtools %}
+  <buildtool_depend>{{ buildtool.name }}</buildtool_depend>
+  {% endfor %}
+
+  {% for dependency in dependencies %}
+  <depend>{{ dependency.name }}</depend>
+  {% endfor %}
+
+  {% for test in testing_CMakeLists %}
+  <test_depend>{{ test.name }}</test_depend>
+  {% endfor %}
+
+  {% for test in testing_package %}
+  <test_depend>{{ test }}</test_depend>
+  {% endfor %}
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
