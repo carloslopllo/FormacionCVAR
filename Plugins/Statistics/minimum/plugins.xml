@@ -1,0 +1,5 @@
+<library path="minimum">
+  <class type="minimum::minimum" base_class_type="filter::filter">
+    <description>This is a minimum plugin.</description>
+  </class>
+</library>

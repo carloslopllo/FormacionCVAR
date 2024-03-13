@@ -1,0 +1,5 @@
+<library path="triangle">
+    <class type="triangle::triangle" base_class_type="polygon_base::RegularPolygon">
+	  <description>This is a triangle plugin.</description>
+	</class>
+</library>

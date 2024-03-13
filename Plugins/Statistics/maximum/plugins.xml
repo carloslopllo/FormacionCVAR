@@ -1,0 +1,5 @@
+<library path="maximum">
+  <class type="maximum::maximum" base_class_type="filter::filter">
+    <description>This is a maximum plugin.</description>
+  </class>
+</library>
