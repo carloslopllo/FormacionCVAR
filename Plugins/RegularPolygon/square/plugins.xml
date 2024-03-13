@@ -1,0 +1,5 @@
+<library path="square">
+    <class type="square::square" base_class_type="polygon_base::RegularPolygon">
+	  <description>This is a square plugin.</description>
+	</class>
+</library>
