@@ -1,0 +1,11 @@
+#ifndef __trigger_hpp__
+#define __trigger_hpp__
+
+#include "inputs.hpp"
+#include "outputs.hpp"
+
+{% for trigger in triggers %}
+void {{ trigger }} (const inputs & in, outputs & out);
+{% endfor %}
+
+#endif

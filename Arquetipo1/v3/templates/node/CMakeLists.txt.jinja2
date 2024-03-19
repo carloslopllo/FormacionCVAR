@@ -1,0 +1,44 @@
+cmake_minimum_required(VERSION 3.8)
+
+project({{ project_name }})
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+{% for buildtool in buildtools %}
+find_package({{ buildtool.name }} {{ buildtool.type }})
+{% endfor %}
+
+{% for dependency in dependencies %}
+find_package({{ dependency.name }} {{ dependency.type }})
+{% endfor %}
+
+#if(BUILD_TESTING)
+#  {% for test in testing_CMakeLists %}
+#  find_package({{ test.name }} {{ test.type }})
+#  {% endfor %}
+#
+#  set(ament_cmake_copyright_FOUND TRUE)
+#  set(ament_cmake_cpplint_FOUND TRUE)
+#
+#  {% for test in testing_CMakeLists %}
+#  {{ test.ament }}
+#  {% endfor %}
+#endif()
+
+include_directories(
+  include
+  include/${PROJECT_NAME}
+)
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+add_executable(central_node src/central_node.cpp src/trigger.cpp)
+ament_target_dependencies(central_node rclcpp std_msgs)
+
+install(TARGETS central_node DESTINATION lib/${PROJECT_NAME})
+
+ament_package()

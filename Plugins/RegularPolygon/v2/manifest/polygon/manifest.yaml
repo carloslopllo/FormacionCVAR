@@ -1,0 +1,54 @@
+---
+  project_name: polygon_base
+
+  project_version: 1.0.0
+
+  project_description: Package containing the plugins management tool
+
+  maintainer_email: carlos.lopez.llorente@alumnos.upm.es
+
+  maintainer: vboxuser
+
+  license: Apache-2.0
+
+  buildtools:
+    - name: ament_cmake
+
+  dependencies:
+    - name: rclcpp
+    - name: pluginlib
+
+  testing_CMakeLists:
+    - name: ament_lint_auto
+      ament: ament_lint_auto_find_test_defaultencies()
+
+    - name: ament_cmake_cppcheck
+      ament: ament_cppcheck(src/ include/ tests/)
+
+    - name: ament_cmake_clang_format
+      ament: ament_clang_format(src/ include/ tests/ --config ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format)
+
+  testing_package:
+    - ament_lint_common
+
+  class_name: plugin
+
+  interface_name: RegularPolygon
+
+  includes:
+    - <chrono>
+    - <functional>
+    - <pluginlib/class_loader.hpp>
+    - <polygon_base/regular_polygon.hpp>
+    - <rclcpp/rclcpp.hpp>
+    - <string>
+
+  parameters:
+    - name: '"polygon_base"'
+      value: '"square::square"'
+      namespace: "std::"
+      type: string
+
+    - name: '"side_length"'
+      value: 10.0
+      type: double

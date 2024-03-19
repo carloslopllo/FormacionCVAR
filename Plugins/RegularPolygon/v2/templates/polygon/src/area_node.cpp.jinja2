@@ -1,0 +1,47 @@
+{% for include in includes %}
+#include {{ include }}
+{% endfor %}
+
+using namespace std::chrono_literals;
+
+class {{ class_name }} : public rclcpp::Node
+{
+public:
+  {{ class_name }}() : Node("{{ class_name }}"), poly_loader("{{ project_name }}", "{{ project_name }}::{{ interface_name }}")
+  {
+    {% for parameter in parameters %}
+	this->declare_parameter({{ parameter.name }}, {{ parameter.value }});
+	{% endfor %}
+
+    timer_ = this->create_wall_timer(1000ms, std::bind(&{{ class_name }}::callback, this));
+  }
+  void callback()
+  {
+    {% for parameter in parameters %}
+	{{ parameter.namespace }}{{ parameter.type }} var_{{ loop.index }} = this->get_parameter({{ parameter.name }}).as_{{ parameter.type }}();
+	{% endfor %}
+
+    try {
+      std::shared_ptr<{{ project_name }}::{{ interface_name }}> poligon = poly_loader.createSharedInstance(var_1);
+      poligon->initialize(var_2);
+
+      RCLCPP_INFO(this->get_logger(), "Polygon_base: %s", var_1.c_str());
+      RCLCPP_INFO(this->get_logger(), "Side_length: %.2f", var_2);
+      RCLCPP_INFO(this->get_logger(), "Area: %.2f\n", poligon->area());
+    } catch (pluginlib::PluginlibException & ex) {
+      printf("The plugin failed to load for some reason. Error: %s\n", ex.what());
+    }
+  }
+
+private:
+  pluginlib::ClassLoader<{{ project_name }}::{{ interface_name }}> poly_loader;
+  rclcpp::TimerBase::SharedPtr timer_;
+};
+
+int main(int argc, char ** argv)
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<{{ class_name }}>());
+  rclcpp::shutdown();
+  return 0;
+}

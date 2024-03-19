@@ -1,0 +1,59 @@
+cmake_minimum_required(VERSION 3.8)
+
+project({{ project_name }})
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+{% for buildtool in buildtools %}
+find_package({{ buildtool.name }} {{ buildtool.type }})
+{% endfor %}
+
+{% for dependency in dependencies %}
+find_package({{ dependency.name }} {{ dependency.type }})
+{% endfor %}
+
+#if(BUILD_TESTING)
+#  {% for test in testing_CMakeLists %}
+#  find_package({{ test.name }} {{ test.type }})
+#  {% endfor %}
+#
+#  set(ament_cmake_copyright_FOUND TRUE)
+#  set(ament_cmake_cpplint_FOUND TRUE)
+#
+#  {% for test in testing_CMakeLists %}
+#  {{ test.ament }}
+#  {% endfor %}
+#endif()
+
+add_executable(area_node src/area_node.cpp)
+
+target_include_directories(area_node PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>
+)
+
+target_compile_features(area_node PUBLIC c_std_99 cxx_std_17)
+
+ament_target_dependencies(
+	area_node
+	rclcpp
+	"pluginlib"
+)
+
+install(
+	DIRECTORY include/
+	DESTINATION include
+)
+
+install(
+	TARGETS area_node
+	DESTINATION lib/${PROJECT_NAME}
+)
+
+ament_export_include_directories(
+	include
+)
+
+ament_package()

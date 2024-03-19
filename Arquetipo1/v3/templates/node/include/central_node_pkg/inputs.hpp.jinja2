@@ -1,0 +1,12 @@
+#ifndef __inputs_hpp__
+#define __inputs_hpp__
+
+#include "std_msgs/msg/int32.hpp"
+
+struct inputs {
+	{% for input in inputs %}
+	{{ input.type }} {{ input.topic }};
+	{% endfor %}
+};
+
+#endif

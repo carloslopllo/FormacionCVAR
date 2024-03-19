@@ -1,0 +1,18 @@
+#ifndef {{ project_name }}_{{ interface_name }}_HPP
+#define {{ project_name }}_{{ interface_name }}_HPP
+
+namespace {{ project_name }}
+{
+class {{ interface_name }}
+{
+public:
+  virtual void initialize(double side_length) = 0;
+  virtual double area() = 0;
+  virtual ~{{ interface_name }}() {}
+
+protected:
+  {{ interface_name }}() {}
+};
+}  // namespace polygon_base
+
+#endif

@@ -1,0 +1,12 @@
+#ifndef __trigger_cpp__
+#define __trigger_cpp__
+
+#include "central_node_pkg/trigger.hpp"
+
+{% for trigger in triggers %}
+void {{ trigger }} (const inputs & in, outputs & out) {
+	
+}
+{% endfor %}
+
+#endif
